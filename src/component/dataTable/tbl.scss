@@ -1,0 +1,50 @@
+// dataTable.scss
+
+.dataTable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+
+  
+
+    table {
+      width: 100%;
+      border-collapse: inherit;
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        size: autho;
+      }
+
+      th {
+        background-color: #ece2e2;
+        font-weight: bold;
+        border-bottom: 1px solid #000000;
+        size: autho;
+      }
+
+      td {
+        border-bottom: 1px solid #e0e0e0;
+        size: autho;
+      }
+
+      tr {
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .action {
+        display: flex;
+        gap: 10px;
+      }
+    }
+  }
+
+  .MuiFormControlLabel-root {
+    margin-right: 0;
+  }
+

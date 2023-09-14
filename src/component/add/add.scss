@@ -1,0 +1,108 @@
+@import "../../styles/variables.scss";
+
+.add {
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.724);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  .modal {
+    padding: 30px;
+    border-radius: 10px;
+    align-items: last baseline;
+    background-color: $main-bg;
+    position: relative;
+    width: 60%;
+
+    h1 {
+      margin-bottom: 40px;
+      font-size: 24px;
+      color: $soft-color;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    form {
+      display: grid; /* Use CSS Grid for the form layout */
+      grid-template-columns: repeat(2, 1fr); /* Two columns */
+      gap: 20px; /* Gap between columns */
+
+      .item {
+        /* Remove width and adjust styling */
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 5px;
+        padding: 10px;
+
+        label {
+          font-size: 14px;
+        }
+
+        input {
+          padding: 10px;
+          background-color: transparent;
+          color: white;
+          outline: none;
+          border: 1px solid $soft-color;
+          border-radius: 3px;
+        }
+      }
+
+      button {
+        /* Adjust button width */
+        grid-column: span 2; /* Span two columns */
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      /* Add this custom CSS to your add.scss file */
+      .custom-datepicker {
+        font-size: 22px; /* Increase the font size */
+        border: 3px solid #ccc; /* Add a border for better visibility */
+        border-radius: 5px; /* Add some border radius */
+        padding: 8px; /* Add padding to the calendar */
+        width: 250px; /* Set a custom width */
+        background-color: white; /* Set a background color */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+        z-index: 9999; /* Ensure it's above other elements */
+      }
+
+      /* Add this custom CSS to your add.scss file */
+      .select-wrapper {
+        position: relative; /* Ensure relative positioning for the select element */
+      }
+
+      select {
+        /* Apply styling to the select element */
+        font-size: 18px; /* Increase the font size to make it more visible */
+        padding: 10px; /* Add padding for spacing */
+        background-color: rgb(66, 39, 6); /* Make the background transparent */
+        color: white; /* Set the text color to white */
+        outline: none; /* Remove the outline on focus */
+        border: 1px solid $soft-color; /* Add a border for better visibility */
+        border-radius: 3px; /* Add some border radius */
+        width: 100%; /* Set the width to 100% to fill the container */
+      }
+
+      /* Style the dropdown arrow (optional) */
+      select::after {
+        content: "▼"; /* Unicode character for a down arrow */
+        position: absolute;
+        top: 50%;
+        right: 10px; /* Adjust the position of the arrow */
+        transform: translateY(-50%);
+        pointer-events: none; /* Allow clicks to pass through to the select element */
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+.user-dropdown {
+  // position: absolute;
+  margin-top: 120px;
+  top: 100%; /* Position the dropdown below the user icon */
+  right: 0; /* Adjust this value for horizontal positioning */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Ensure the dropdown appears above other elements */
+  display: flex;
+}
+
+.user-dropdown.open {
+  // display: block; /* Show the dropdown when it's open */
+  display: grid; /* Use CSS Grid for the form layout */
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  gap: 5px; /* Gap between columns */
+}
+
+.user-dropdown-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align buttons to the left */
+  padding: 8px;
+}
+
+.user-dropdown-content button {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.user-dropdown-content button:last-child {
+  margin-right: 0;
+}
+
+.user-dropdown-content button:hover {
+  background-color: #f0f0f0;
+}
