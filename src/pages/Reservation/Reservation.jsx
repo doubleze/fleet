@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./products.scss";
 import DataTable from "../../component/dataTable/DataTable";
 import DataTbl from "../../component/dataTable/DataTbl"; //DataTbl
-import Add from "../../component/add/Add";
+import Addn from "../../component/add/Addn";
 import axios from "axios";
 // import { resrvations } from "../../data";
 
@@ -100,7 +100,7 @@ const Reservation = () => {
         getRowId={(row) => row._id}
       />
 
-      {open && <Add slug="Resrvation" columns={columns} setOpen={setOpen} />}
+      {open && <Addn slug="Resrvation" columns={columns} setOpen={setOpen} />}
     </div>
 
     

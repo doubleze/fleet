@@ -5,7 +5,7 @@ import {
   import React, { useState } from "react";
   import "./dataTable.scss";
   import { Link } from "react-router-dom";
-  import Add from "../../component/add/Add";
+  import Addn from "../../component/add/Addn";
   
   
   const DataTable = (props) => {
@@ -70,7 +70,7 @@ import {
           disableColumnSelector
         />
         {open && (
-  <Add slug="Reservation" columns={props.columns} setOpen={setOpen} data={selectedItem} />
+  <Addn slug="Reservation" columns={props.columns} setOpen={setOpen} data={selectedItem} />
 )}
       </div>
     );

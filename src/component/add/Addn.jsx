@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import "./add.scss";
 
-const Add = (props) => {
+const Addn = (props) => {
   const { data } = props;
   const [formData, setFormData] = useState(data || {});
   const [vehicleOptions, setVehicleOptions] = useState([]);
@@ -187,4 +187,4 @@ const Add = (props) => {
   );
 };
 
-export default Add;
+export default Addn;

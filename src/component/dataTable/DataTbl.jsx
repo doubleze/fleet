@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./tbl.scss";
 import { Link } from "react-router-dom";
-import Add from "../../component/add/Add";
+import Addn from "../../component/add/Addn";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Table from "@mui/material/Table";
@@ -113,7 +113,7 @@ const DataTabl = (props) => {
         </Table>
       </TableContainer>
       {open && (
-        <Add
+        <Addn
           slug="Reservation"
           columns={props.columns}
           setOpen={setOpen}
