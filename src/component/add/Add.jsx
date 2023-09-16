@@ -9,6 +9,24 @@ const Add = (props) => {
   const [formData, setFormData] = useState(data || {});
   const [vehicleOptions, setVehicleOptions] = useState([]);
 
+  // Declare userData variables with default values
+  let department = "";
+  let fullName = "";
+  let userName = "";
+
+  // Try to retrieve userData from local storage
+  try {
+    const userDataJSON = localStorage.getItem("userData");
+    if (userDataJSON) {
+      const userData = JSON.parse(userDataJSON);
+      department = userData.departmnt;
+      fullName = userData.nm;
+      userName = userData.userName;
+    }
+  } catch (error) {
+    console.error("Error retrieving userData from local storage:", error);
+  }
+
   useEffect(() => {
     setFormData(data || {});
     setVehicleOptions([]);
@@ -64,15 +82,16 @@ const Add = (props) => {
         axios
           .put(`http://localhost:5000/reservation/update/${_id}`, {
             dts: dts,
-            requster: requster,
-            depmnt: depmnt,
+            requster: fullName,
+            depmnt: department,
             frm: frm,
             _to: _to,
             tm_frm: tm_frm,
             tm_to: tm_to,
             dsc: dsc,
-            reqStat: 1,
-            vehicle: new Array(vehicle),
+            userName: userName
+            // reqStat: 1,
+            // vehicle: new Array(vehicle),
           })
           .then((res) => {
             // Alert success
@@ -94,18 +113,19 @@ const Add = (props) => {
         axios
           .post("http://localhost:5000/reservation/Nrs", {
             dts: dts,
-            requster: requster,
-            depmnt: depmnt,
+            requster: fullName,
+            depmnt: department,
             frm: frm,
             _to: _to,
             tm_frm: tm_frm,
             tm_to: tm_to,
             dsc: dsc,
-            reqStat: 1,
-            vehicle: new Array(vehicle),
+            userName: userName,
+            // reqStat: 1,
+            // vehicle: new Array(vehicle),
           })
           .then((res) => {
-            resetForm();
+            setFormData({});
 
             // Alert success
             alert("Reservation is created successfully!");
@@ -165,6 +185,20 @@ const Add = (props) => {
                       </option>
                     ))}
                   </select>
+                ) : column.field === "depmnt" ? (
+                  <input
+                    type={column.type || "text"}
+                    placeholder={column.headerName}
+                    value={department}
+                    readOnly
+                  />
+                ) : column.field === "requster" ? (
+                  <input
+                    type={column.type || "text"}
+                    placeholder={column.headerName}
+                    value={fullName}
+                    readOnly
+                  />
                 ) : (
                   <input
                     type={column.type || "text"}
