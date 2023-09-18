@@ -1,25 +1,20 @@
-.dataTable{
-
-  .dataGrid{
+.dataTable {
+  padding: 0; /* Remove any padding to reduce space */
+  .dataGrid {
+    display: inline-flex;
     background: white;
-    padding: 20px;
-
-    .MuiDataGrid-toolbarContainer{
+    justify-self: auto;
+    width: 100%; /* Occupy the full width of the parent */
+    .MuiDataGrid-cell {
+      padding: 2px; /* Add some padding to cells for spacing  */
+    }
+    .MuiDataGrid-toolbarContainer {
       flex-direction: row-reverse;
     }
-
-    img{
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .action{
-      display: flex;
-      gap: 15px;
-
-      img{
+    .action {
+      display: inline-flex;
+      gap: 20px;
+      img {
         width: 20px;
         height: 20px;
         cursor: pointer;

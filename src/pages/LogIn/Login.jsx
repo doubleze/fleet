@@ -20,6 +20,7 @@ const Login = () => {
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const [userData, setUserData] = useState ("");
 
   useEffect(() => {
     userRef.current.focus();
@@ -39,9 +40,13 @@ const Login = () => {
       });
       
       
-      console.log("Response data ", response.data);
+      // console.log("Response data ", response.data);
       updateUserRole(response.data.userRole); // Update userRole in the auth context
       setCookie("user", response.data.userRole);
+      localStorage.setItem("userData", JSON.stringify(response.data));
+
+      // console.log("User data in local storage ", localStorage.getItem("userData") );
+
 
       setUser("");
       setPwd("");

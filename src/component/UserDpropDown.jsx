@@ -7,6 +7,7 @@ function UserDpropDown({ isOpen, onClose }) {
 
   const handleLogout = () => {
     removeCookie("user");
+    localStorage.clear();
     console.log("here is the cookie ", cookie.user);
   };
 
