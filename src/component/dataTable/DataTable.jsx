@@ -1,6 +1,6 @@
 import {
     DataGrid,
-    GridToolbar,
+    GridToolbar
   } from "@mui/x-data-grid";
   import React, { useState } from "react";
   import "./dataTable.scss";
@@ -13,6 +13,7 @@ import {
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({});
     const [selectedItem, setSelectedItem] = useState(null);
+   
   
     const handleDelete = (id) => {
       //delete the item
@@ -28,7 +29,7 @@ import {
     const actionColumn = {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 130,
       renderCell: (params) => {
         return (
           <div className="action">

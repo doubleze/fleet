@@ -32,9 +32,16 @@
     }
 
     form {
-      display: grid; /* Use CSS Grid for the form layout */
-      grid-template-columns: repeat(2, 1fr); /* Two columns */
-      gap: 12px; /* Gap between columns */
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas:
+        "inputs inputs"
+        "space space"
+        "inputs inputs"
+        "buttons buttons";
+      gap: 12px;
+      align-content: end;
 
       .item {
         /* Remove width and adjust styling */
@@ -58,11 +65,11 @@
         }
       }
 
-      button {
-        /* Adjust button width */
-        grid-column: span 2; /* Span two columns */
-        padding: 6px;
-        cursor: pointer;
+      .button-container {
+        grid-area: buttons;
+        display: flex;
+        justify-content: space-between;
+        align-self: end; 
       }
 
       /* Add this custom CSS to your add.scss file */
@@ -77,7 +84,7 @@
         z-index: 9999; /* Ensure it's above other elements */
       }
 
-      /* Add this custom CSS to your add.scss file */
+      /* Add this custom CSS to your add.scss file  */
       .select-wrapper {
         position: relative; /* Ensure relative positioning for the select element */
       }
@@ -104,5 +111,27 @@
         pointer-events: none; /* Allow clicks to pass through to the select element */
       }
     }
+  }
+
+  /* Add this CSS to your add.scss file */
+  .submit-button,
+  .clear-button {
+    display: block; /* Display the buttons as block-level elements */
+    margin-top: 10px; /* Add margin to separate them from the form inputs */
+    padding: 10px 20px; /* Adjust padding to set the button size */
+    width: auto; /* Let the button size adjust to content */
+    background-color: #007bff; /* Customize the button background color */
+    color: white; /* Set text color to white */
+    border: none; /* Remove the border */
+    border-radius: 5px; /* Add border radius for rounded corners */
+    cursor: pointer; /* Add cursor pointer on hover */
+  }
+
+  .submit-button {
+    background-color: #28a745; /* Customize the Submit button color */
+  }
+
+  .clear-button {
+    background-color: #dc3545; /* Customize the Clear button color */
   }
 }

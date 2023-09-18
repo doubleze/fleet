@@ -8,11 +8,14 @@ const Add = (props) => {
   const { data } = props;
   const [formData, setFormData] = useState(data || {});
   const [vehicleOptions, setVehicleOptions] = useState([]);
+  const [dispAct, setDispAct] = useState(false);
 
   // Declare userData variables with default values
   let department = "";
   let fullName = "";
   let userName = "";
+  let rol = "";
+  let resrvStat = 0;
 
   // Try to retrieve userData from local storage
   try {
@@ -22,19 +25,29 @@ const Add = (props) => {
       department = userData.departmnt;
       fullName = userData.nm;
       userName = userData.userName;
+      rol = userData.userRole;
     }
   } catch (error) {
     console.error("Error retrieving userData from local storage:", error);
   }
 
-  useEffect(() => {
-    setFormData(data || {});
-    setVehicleOptions([]);
+  useEffect(
+    () => {
+      setFormData(data || {});
+      setVehicleOptions([]);
 
-    axios.get("http://localhost:5000/regtCars/dropdown").then((response) => {
-      setVehicleOptions(response.data);
-    });
-  }, [data]);
+      axios.get("http://localhost:5000/regtCars/dropdown").then((response) => {
+        setVehicleOptions(response.data);
+      });
+      if (rol > 1) {
+        setDispAct(true);
+      } else {
+        setDispAct(false);
+      }
+    },
+    [data],
+    dispAct
+  );
 
   const convertToDate = (dateString) => {
     if (typeof dateString !== "string") {
@@ -89,8 +102,8 @@ const Add = (props) => {
             tm_frm: tm_frm,
             tm_to: tm_to,
             dsc: dsc,
-            userName: userName
-            // reqStat: 1,
+            userName: userName,
+            reqStat: resrvStat,
             // vehicle: new Array(vehicle),
           })
           .then((res) => {
@@ -101,7 +114,7 @@ const Add = (props) => {
         props.onUpdate(updatedRecord);
       } catch (error) {
         // Alert error
-        if (error.response.status === 400) {
+        if (error.response === 400) {
           console.log(error.response.data.message);
         }
         console.log(error.response);
@@ -121,7 +134,7 @@ const Add = (props) => {
             tm_to: tm_to,
             dsc: dsc,
             userName: userName,
-            // reqStat: 1,
+            reqStat: resrvStat,
             // vehicle: new Array(vehicle),
           })
           .then((res) => {
@@ -133,7 +146,7 @@ const Add = (props) => {
           });
       } catch (error) {
         // Alert error
-        if (error.response.status === 400) {
+        if (error.response === 400) {
           console.log(error.response.data.message);
         }
         console.log(error.response);
@@ -144,6 +157,130 @@ const Add = (props) => {
     }
   };
 
+  const handleClear = () => {
+    setFormData({});
+  };
+
+  const handleApprov = (e) => {
+    e.preventDefault();
+    props.setOpen(false);
+    
+    if (rol === 2 && resrvStat !== 3) {
+      resrvStat = 1;
+    } else if( resrvStat !== 3) {
+      resrvStat = 2;
+    }else{
+      resrvStat = 3;
+    }
+    const {
+      _id,
+      dts,
+      requster,
+      depmnt,
+      frm,
+      _to,
+      tm_frm,
+      tm_to,
+      dsc,
+      userName_,
+      vehicle,
+    } = formData;
+
+    console.log(" My id is ", _id);
+    console.log(" reservation status ", resrvStat);
+    if (rol ===3 ){
+    try {
+      
+      axios
+        .put(`http://localhost:5000/reservation/uptStus/${_id}`, {
+          reqStat: resrvStat,
+          vehicle: vehicle
+        })
+        .then((res) => {
+          // Alert success
+          alert(" Approved successfully!");
+          console.log(res);
+        });
+        
+      props.onUpdate(updatedRecord);
+    } catch (error) {
+      // Alert error
+      if (error.response === 400) {
+        console.log(error.response.data.message);
+      }
+      console.log(error.response);
+      alert("Error updateding !! ");
+    }
+  }else{
+    try {
+      axios
+      .put(`http://localhost:5000/reservation/uptStus/${_id}`, {
+        reqStat: resrvStat
+      })
+    
+      .then((res) => {
+        // Alert success
+        alert(" Approved successfully!");
+        console.log(res);
+      });
+      
+    props.onUpdate(updatedRecord);
+  } catch (error) {
+    // Alert error
+    if (error.response === 400) {
+      console.log(error.response.data.message);
+    }
+    console.log(error.response);
+    alert("Error updateding !! ");
+  }
+  }
+    console.log("Approved");
+  };
+
+  
+  const handleReject = () => {
+    resrvStat = 3;
+    const {
+      _id,
+      dts,
+      requster,
+      depmnt,
+      frm,
+      _to,
+      tm_frm,
+      tm_to,
+      dsc,
+      userName_,
+      vehicle,
+    } = formData;
+
+    console.log(" on Reject ", _id);
+    console.log(" reservation status ", resrvStat);
+    
+    try {
+      
+      axios
+        .put(`http://localhost:5000/reservation/uptStus/${_id}`, {
+          reqStat: resrvStat
+        })
+        .then((res) => {
+          // Alert success
+          alert(" Rejected !");
+          console.log(res);
+        });
+        
+      props.onUpdate(updatedRecord);
+    } catch (error) {
+      // Alert error
+      if (error.response === 400) {
+        console.log(error.response.data.message);
+      }
+      console.log(error.response);
+      alert("Error updateding !! ");
+    }
+    setFormData({});
+  };
+
   return (
     <div className="add">
       <div className="modal">
@@ -151,71 +288,176 @@ const Add = (props) => {
           X
         </span>
         <h1>Add new {props.slug}</h1>
-        <form onSubmit={handleSubmit}>
-          {props.columns
-            .filter((item) => item.field !== "id" && item.field !== "img")
-            .map((column) => (
-              <div className="item" key={column.field}>
-                <label>{column.headerName}</label>
-                {column.field === "dts" ? (
-                  <DatePicker
-                    selected={convertToDate(formData.dts)}
-                    onChange={(date) => {
-                      setFormData({
-                        ...formData,
-                        dts: date
-                          ? `${date.getDate()}-${
-                              date.getMonth() + 1
-                            }-${date.getFullYear()}`
-                          : null,
-                      });
-                    }}
-                  />
-                ) : column.field === "vehicle" ? (
-                  <select
-                    className="select-wrapper"
-                    value={formData.vehicle?.label}
-                    onChange={(e) =>
-                      setFormData({ ...formData, ["vehicle"]: e.target.value })
-                    }
-                  >
-                    {vehicleOptions.map((option) => (
-                      <option key={option.label} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : column.field === "depmnt" ? (
-                  <input
-                    type={column.type || "text"}
-                    placeholder={column.headerName}
-                    value={department}
-                    readOnly
-                  />
-                ) : column.field === "requster" ? (
-                  <input
-                    type={column.type || "text"}
-                    placeholder={column.headerName}
-                    value={fullName}
-                    readOnly
-                  />
-                ) : (
-                  <input
-                    type={column.type || "text"}
-                    placeholder={column.headerName}
-                    value={formData[column.field] || ""}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        [column.field]: e.target.value,
-                      })
-                    }
-                  />
-                )}
-              </div>
-            ))}
-          <button type="submit">Send</button>
-        </form>
+        {dispAct ? (
+          <form onSubmit={handleApprov}>
+            {props.columns
+              .filter(
+                (item) =>
+                  item.field !== "id" &&
+                  item.field !== "img" &&
+                  item.field !== "reqStat"
+              )
+              .map((column) => (
+                <div className="item" key={column.field}>
+                  <label>{column.headerName}</label>
+                  {column.field === "dts" ? (
+                    <DatePicker
+                      selected={convertToDate(formData.dts)}
+                      onChange={(date) => {
+                        setFormData({
+                          ...formData,
+                          dts: date
+                            ? `${date.getDate()}-${
+                                date.getMonth() + 1
+                              }-${date.getFullYear()}`
+                            : null,
+                        });
+                      }}
+                    />
+                  ) : column.field === "vehicle" ? (
+                    <select
+                      className="select-wrapper"
+                      value={formData.vehicle?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          ["vehicle"]: e.target.value,
+                        })
+                      }
+                    >
+                      {vehicleOptions.map((option) => (
+                        <option key={option.label} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : column.field === "depmnt" ? (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={department}
+                      readOnly
+                    />
+                  ) : column.field === "requster" ? (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={fullName}
+                      readOnly
+                    />
+                  ) : (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={formData[column.field] || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [column.field]: e.target.value,
+                        })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+            <div className="button-container">
+              <button type="submit" className="submit-button">
+                Approve
+              </button>
+              <button
+                type="button"
+                onClick={handleReject}
+                className="clear-button"
+              >
+                Reject
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            {props.columns
+              .filter(
+                (item) =>
+                  item.field !== "id" &&
+                  item.field !== "img" &&
+                  item.field !== "reqStat"
+              )
+              .map((column) => (
+                <div className="item" key={column.field}>
+                  <label>{column.headerName}</label>
+                  {column.field === "dts" ? (
+                    <DatePicker
+                      selected={convertToDate(formData.dts)}
+                      onChange={(date) => {
+                        setFormData({
+                          ...formData,
+                          dts: date
+                            ? `${date.getDate()}-${
+                                date.getMonth() + 1
+                              }-${date.getFullYear()}`
+                            : null,
+                        });
+                      }}
+                    />
+                  ) : column.field === "vehicle" ? (
+                    <select
+                      className="select-wrapper"
+                      value={formData.vehicle?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          ["vehicle"]: e.target.value,
+                        })
+                      }
+                    >
+                      {vehicleOptions.map((option) => (
+                        <option key={option.label} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : column.field === "depmnt" ? (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={department}
+                      readOnly
+                    />
+                  ) : column.field === "requster" ? (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={fullName}
+                      readOnly
+                    />
+                  ) : (
+                    <input
+                      type={column.type || "text"}
+                      placeholder={column.headerName}
+                      value={formData[column.field] || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [column.field]: e.target.value,
+                        })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+            <div className="button-container">
+              <button type="submit" className="submit-button">
+                Submit
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="clear-button">
+                Clear
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
